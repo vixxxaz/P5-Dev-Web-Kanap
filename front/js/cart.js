@@ -1,7 +1,5 @@
 // mettre en place le local storage
 let kanapLocalStorage = JSON.parse(localStorage.getItem("kanap"));
-console.log(kanapLocalStorage);
-
 const forEmptyCart = document.querySelector("#cart__items");
 
 if (!kanapLocalStorage) {
@@ -12,6 +10,7 @@ if (!kanapLocalStorage) {
     votrePanier.style.display = "none";
 } else {
     for (let i = 0; i < kanapLocalStorage.length; i++) {
+
         let kanapArticle = document.createElement("article");
         document.querySelector("#cart__items").appendChild(kanapArticle);
         kanapArticle.className = "cart__item";
@@ -42,7 +41,7 @@ if (!kanapLocalStorage) {
         let kanapTitle = document.createElement("h2");
         kanapDivDescription.appendChild(kanapTitle);
         kanapTitle.innerHTML = kanapLocalStorage[i].name;
-        console.log(kanapTitle);
+
 
         //ajout p la couleur
         let kanapTxt = document.createElement("p");
@@ -50,9 +49,26 @@ if (!kanapLocalStorage) {
         kanapTxt.innerHTML = kanapLocalStorage[i].colorKanap;
 
         // ajout du prix
-        let kanapPrice = document.createElement("p");
-        kanapDivDescription.appendChild(kanapPrice);
-        kanapPrice.innerHTML = kanapLocalStorage[i].price + ' €';
+        // let kanapPrice = document.createElement("p");
+        // kanapDivDescription.appendChild(kanapPrice);
+        // kanapPrice.innerHTML = kanapLocalStorage[i].price + ' €';
+        let Price = "";
+        let id = url.searchParams("id");
+
+        fetch("https://localhost:3000/api/products/")
+
+        .then(response => response.json())
+
+        .then(async function(result) {
+            Price = await result;
+            console.log(result);
+
+            let kanapPrice = document.createElement("p");
+            kanapDivDescription.appendChild(kanapPrice);
+            kanapPrice.innerHTML = "prix :"
+            Price + ' €';
+
+        })
 
 
         //ajout de la div setting
@@ -90,6 +106,37 @@ if (!kanapLocalStorage) {
         quantityReset.appendChild(kanapDelete);
         kanapDelete.className = "deleteItem";
         kanapDelete.innerHTML = "Supprimer";
+
+        kanapDelete.addEventListener("click", (e) => {
+
+            e.preventDefault();
+
+            //prend l id et la couleur 
+            let delId = kanapLocalStorage[i].Id;
+            let delColor = kanapLocalStorage.colorKanap;
+
+            //choix de l'élement cliqué
+
+            kanapLocalStorage = kanapLocalStorage.filter(
+                el => el.Id !== delId || el.colorKanap !== delColor
+            );
+
+            //envoie les donnée
+            localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+
+            //popup suppression et reload
+            alert(" Votre canapé à bien été supprimer");
+
+            // si pas de canapé dans le panier
+            if (kanapLocalStorage.length != 0) {
+                localStorage.clear();
+            }
+
+            //reload
+            location.reload();
+
+
+        });
 
     }
 }

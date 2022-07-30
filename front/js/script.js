@@ -5,7 +5,6 @@
 async function getKanap() {
     var kanapData = await fetch("http://localhost:3000/api/products");
     return await kanapData.json();
-
 };
 
 
