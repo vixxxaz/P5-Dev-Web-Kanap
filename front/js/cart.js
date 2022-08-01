@@ -1,12 +1,13 @@
 // mettre en place le local storage
 let kanapLocalStorage = JSON.parse(localStorage.getItem("kanap"));
+
 const forEmptyCart = document.querySelector("#cart__items");
 
 if (!kanapLocalStorage) {
     //pour le panier vide
-    let titre = document.querySelector("h1");
+    let title = document.querySelector("h1");
     let votrePanier = document.querySelector(".cart");
-    titre.innerHTML = "votre panier est vide";
+    title.innerHTML = "votre panier est vide";
     votrePanier.style.display = "none";
 } else {
     for (let i = 0; i < kanapLocalStorage.length; i++) {
@@ -49,27 +50,15 @@ if (!kanapLocalStorage) {
         kanapTxt.innerHTML = kanapLocalStorage[i].colorKanap;
 
         // ajout du prix
-        // let kanapPrice = document.createElement("p");
-        // kanapDivDescription.appendChild(kanapPrice);
-        // kanapPrice.innerHTML = kanapLocalStorage[i].price + ' €';
-        let Price = "";
-        let id = url.searchParams("id");
 
-        fetch("https://localhost:3000/api/products/")
+        let kanapPrice = document.createElement("p");
+        kanapDivDescription.appendChild(kanapPrice);
+        fetch("http://localhost:3000/api/products/")
 
-        .then(response => response.json())
-
-        .then(async function(result) {
-            Price = await result;
-            console.log(result);
-
-            let kanapPrice = document.createElement("p");
-            kanapDivDescription.appendChild(kanapPrice);
-            kanapPrice.innerHTML = "prix :"
-            Price + ' €';
-
-        })
-
+        .then(re => re.json())
+            .then(data => {
+                kanapPrice.innerHTML = data[i].price + ' €'
+            });
 
         //ajout de la div setting
         let kanapContentSetting = document.createElement("div");
@@ -107,22 +96,23 @@ if (!kanapLocalStorage) {
         kanapDelete.className = "deleteItem";
         kanapDelete.innerHTML = "Supprimer";
 
+        //écoute le bouton supprimer
         kanapDelete.addEventListener("click", (e) => {
 
             e.preventDefault();
 
             //prend l id et la couleur 
-            let delId = kanapLocalStorage[i].Id;
-            let delColor = kanapLocalStorage.colorKanap;
+            var delId = kanapLocalStorage.Id;
+            var delColor = kanapLocalStorage.colorKanap;
 
             //choix de l'élement cliqué
 
             kanapLocalStorage = kanapLocalStorage.filter(
-                el => el.Id !== delId || el.colorKanap !== delColor
+                el => el.Id != delId || el.colorKanap != delColor
             );
 
             //envoie les donnée
-            localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+            localStorage.getItem("cart", JSON.stringify(kanapLocalStorage));
 
             //popup suppression et reload
             alert(" Votre canapé à bien été supprimer");
@@ -134,7 +124,6 @@ if (!kanapLocalStorage) {
 
             //reload
             location.reload();
-
 
         });
 

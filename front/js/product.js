@@ -16,13 +16,13 @@ function getKanap() {
     // Répartition des données de l'API dans le DOM
     .then(async function(resultatAPI) {
             kanap = await resultatAPI;
-            console.table(kanap);
+
             if (kanap) {
                 kanapDisplay(kanap);
             }
         })
         .catch((error) => {
-            console.log("Erreur !");
+            alert("Erreur !");
         })
 }
 
@@ -102,17 +102,16 @@ function addToCart(kanapId) {
         if (quantityChoice.value > 0 && quantityChoice.value <= 100 && quantityChoice.value != 0 && colorChoice.value != 0) {
 
             //choix couleur
-            let colors = colorChoice.value;
+            var colors = colorChoice.value;
 
             //choix quantity
-            let quantity = quantityChoice.value;
+            var quantity = quantityChoice.value;
 
             // option du kanap
             let optionsKanap = {
                 Id: kanapId,
                 colorKanap: colors,
                 quantity: Number(quantity),
-                // price: kanapId.price,
                 description: kanapId.description,
                 name: kanapId.name,
                 imgKanap: kanapId.imageUrl,
@@ -120,7 +119,7 @@ function addToCart(kanapId) {
             };
 
             //creer le local storage
-            let kanapLocalStorage = JSON.parse(localStorage.getItem("kanap"));
+            var kanapLocalStorage = JSON.parse(localStorage.getItem("Kanap"));
 
             //fenetre pop up ajout kanap
 
@@ -132,12 +131,13 @@ function addToCart(kanapId) {
 
             //importation dans le local storage
             if (kanapLocalStorage) {
-                const resultFind = kanapLocalStorage.find(
+                var resultFind = kanapLocalStorage.find(
                     (el) => el.Id === kanapId && el.colorKanap === colors);
 
                 // si le panier à déjà un article
 
                 if (resultFind) {
+
                     let newQuantity =
                         parseInt(optionsKanap.quantity) + parseInt(resultFind.quantity);
                     resultFind.quantity = newQuantity;
