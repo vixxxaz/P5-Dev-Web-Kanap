@@ -1,36 +1,35 @@
 var str = window.location.href;
 var url = new URL(str);
 var idKanap = url.searchParams.get("id");
-let kanap = "";
+let data = "";
 
 
 
-getKanap();
 
-function getKanap() {
-    fetch("http://localhost:3000/api/products/" + idKanap)
-        .then((res) => {
-            return res.json();
-        })
+fetch("http://localhost:3000/api/products/" + idKanap)
 
-    // Répartition des données de l'API dans le DOM
-    .then(async function(resultatAPI) {
-            kanap = await resultatAPI;
+.then(function(resapi) {
+    if (resapi.ok) {
+        return resapi.json();
+    }
 
-            if (kanap) {
-                kanapDisplay(kanap);
-            }
-        })
-        .catch((error) => {
-            alert("Erreur !");
-        })
-}
+})
+
+// Répartition des données de l'API dans le DOM
+.then(function(data) {
+        kanapDisplay(data);
+    })
+    .catch((error) => {
+        alert("Erreur !");
+    })
+
+
 
 
 //afficher les information du produit 
 
 
-function kanapDisplay(kanap) {
+function kanapDisplay(data) {
 
     //ajout de l'image
 
@@ -38,31 +37,31 @@ function kanapDisplay(kanap) {
 
     document.querySelector('.item__img').appendChild(kanapImg);
 
-    kanapImg.src = kanap.imageUrl;
+    kanapImg.src = data.imageUrl;
 
-    kanapImg.alt = kanap.altTxt;
+    kanapImg.alt = data.altTxt;
 
     //ajout du nom
 
-    let name = kanap.name;
+    let name = data.name;
 
     document.getElementById('title').innerHTML = name;
 
     // ajout du prix
 
-    let price = kanap.price;
+    let price = data.price;
 
     document.getElementById('price').innerHTML = price;
 
     // ajout description
 
-    let description = kanap.description;
+    let description = data.description;
 
     document.getElementById('description').innerHTML = description;
 
     //option et couleur
 
-    let options = kanap.colors;
+    let options = data.colors;
 
     //avoir la liste deroulante
 
@@ -78,83 +77,92 @@ function kanapDisplay(kanap) {
 
     };
 
-    addToCart(kanap);
+    addToCart(data);
 
 }
+//ajout au local storage
 
 // choix de l utilisateur
 
-const colorChoice = document.querySelector("#colors")
-const quantityChoice = document.querySelector("#quantity")
-
+var colorChosen = document.querySelector("#colors")
+var quantityChosen = document.querySelector("#quantity")
+var btnSendToCart = document.querySelector("#addToCart");
 // function ajout dans le panier
 
-function addToCart(kanapId) {
+function addToCart(data) {
+
+
+
 
     //recuperer le bouton
 
-    let btnSendToCart = document.querySelector("#addToCart");
+    const btnSendToCart = document.querySelector("#addToCart");
 
     //Ecouter le click sur le bouton avec la condition sur la couleur et le nombre
 
-    btnSendToCart.addEventListener("click", () => {
+    btnSendToCart.addEventListener("click", (event) => {
 
-        if (quantityChoice.value > 0 && quantityChoice.value <= 100 && quantityChoice.value != 0 && colorChoice.value != 0) {
+        if (quantityChosen.value > 0 && quantityChosen.value <= 100 && quantityChosen.value != 0 && colorChosen.value != 0) {
 
             //choix couleur
-            var colors = colorChoice.value;
+            var colorsChoice = colorChosen.value;
 
             //choix quantity
-            var quantity = quantityChoice.value;
+            var quantityChoice = quantityChosen.value;
 
             // option du kanap
-            let optionsKanap = {
-                Id: kanapId,
-                colorKanap: colors,
-                quantity: Number(quantity),
-                description: kanapId.description,
-                name: kanapId.name,
-                imgKanap: kanapId.imageUrl,
-                altImg: kanapId.altTxt,
+            var optionsKanap = {
+                Id: idKanap,
+                colorKanap: colorsChoice,
+                quantityKanap: quantityChoice,
+                name: data.name,
+                imgKanap: data.imageUrl,
+                altImg: data.altTxt,
             };
+            console.log(optionsKanap.Id);
 
             //creer le local storage
-            var kanapLocalStorage = JSON.parse(localStorage.getItem("Kanap"));
+            var kanapLocalStorage = JSON.parse(localStorage.getItem("cart"));
+
 
             //fenetre pop up ajout kanap
 
             const popUpComfirmation = () => {
-                if (window.confirm(`Votre commande de ${kanapId.name} à bien été ajouter au panier`)) {
+                if (window.confirm(`Votre commande de ${data.name} à bien été ajouter au panier`)) {
                     window.location.href = 'cart.html';
                 }
             }
 
             //importation dans le local storage
+
+
             if (kanapLocalStorage) {
-                var resultFind = kanapLocalStorage.find(
-                    (el) => el.Id === kanapId && el.colorKanap === colors);
+                let resultFind = kanapLocalStorage.find(
+                    el =>
+                    el.idKanap === optionsKanap.Id && el.colorKanap === optionsKanap.colorKanap);
 
                 // si le panier à déjà un article
 
                 if (resultFind) {
 
                     let newQuantity =
-                        parseInt(optionsKanap.quantity) + parseInt(resultFind.quantity);
-                    resultFind.quantity = newQuantity;
-                    localStorage.setItem("kanap", JSON.stringify(kanapLocalStorage));
+                        parseInt(optionsKanap.quantityKanap) + parseInt(resultFind.quantityKanap);
+                    resultFind.quantityKanap = newQuantity;
+                    localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
                     popUpComfirmation();
 
                     //si le produit n'est pas dans le panier    
                 } else {
+
                     kanapLocalStorage.push(optionsKanap);
-                    localStorage.setItem("kanap", JSON.stringify(kanapLocalStorage));
+                    localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
                     popUpComfirmation();
                 }
                 // panier vide
             } else {
                 kanapLocalStorage = [];
                 kanapLocalStorage.push(optionsKanap);
-                localStorage.setItem("kanap", JSON.stringify(kanapLocalStorage));
+                localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
                 popUpComfirmation();
             }
         }
