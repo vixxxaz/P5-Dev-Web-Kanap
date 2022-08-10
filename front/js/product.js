@@ -109,8 +109,8 @@ function addToCart(data) {
         }
     }
 
-    //creer le local storage
-    var kanapLocalStorage = JSON.parse(localStorage.getItem("cart"));
+    // //creer le local storage
+    // var kanapLocalStorage = JSON.parse(localStorage.getItem("cart"));
     //Ecouter le click sur le bouton avec la condition sur la couleur et le nombre
 
     btnSendToCart.addEventListener("click", () => {
@@ -149,12 +149,12 @@ function addToCart(data) {
             //importation dans le local storage
             if (kanapLocalStorage) {
 
-                for (let i = 0; i < kanapLocalStorage.length; i++) {
+                for (let i = 0; i < (kanapLocalStorage.length); i++) {
 
                     if (optionsKanap.Id === kanapLocalStorage[i].Id &&
                         optionsKanap.colorKanap === kanapLocalStorage[i].colorKanap) {
 
-                        if (optionsKanap.quantityKanap + kanapLocalStorage.quantityKanap > 100) {
+                        if (optionsKanap.quantityKanap + kanapLocalStorage[i].quantityKanap > 100) {
 
                             alert("Impossible d\'ajouter ce produit car limité à 100");
 

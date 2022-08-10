@@ -5,10 +5,6 @@ let url = new URL(window.location.href);
 var id = url.searchParams.get("id");
 
 
-
-
-
-
 fetch(api)
 
 .then(function(resultApi) {
@@ -20,12 +16,13 @@ fetch(api)
 
 .then(function(data) {
 
-        kanapDisplayCart(data);
-    })
-    .catch((error) => {
+    kanapDisplayCart(data);
+})
 
-        alert("Erreur de telechargement des données!");
-    })
+.catch((error) => {
+
+    alert("Erreur de telechargement des données!");
+})
 
 
 // mettre en place le local storage
@@ -39,12 +36,18 @@ var priceTotalKanap = 0;
 
 function kanapDisplayCart(data) {
 
-    if (!kanapLocalStorage) {
+    if (!kanapLocalStorage || (kanapLocalStorage.length) === 0) {
+
         //pour le panier vide
-        let title = document.querySelector("h1");
-        let votrePanier = document.querySelector(".cart");
-        title.innerHTML = "votre panier est vide";
+
+        const title = document.querySelector("h1");
+
+        const votrePanier = document.querySelector(".cart");
+
+        title.textContent = "votre panier est vide";
+
         votrePanier.style.display = "none";
+
         // sinon
     } else {
         for (let i = 0; i < kanapLocalStorage.length; i++) {
@@ -161,7 +164,7 @@ function kanapDisplayCart(data) {
     }
 }
 
-document.getElementById("totalQuantity").innerHTML = kanapLocalStorage.length;
+document.getElementById("totalQuantity").textContent = kanapLocalStorage.length;
 
 function deleteProduct() {
 
@@ -188,3 +191,161 @@ function deleteProduct() {
         })
     }
 }
+
+//prendre le formaulaire
+
+let formulaire = document.querySelector(".cart__order__form");
+
+
+// crée variable regex
+var adressReg = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+var nameReg = new RegExp("^[A-zÀ-ú \-]+$");
+var emailReg = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
+
+
+var firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
+
+formulaire.firstName.addEventListener("change", function(e) {
+    var value = e.target.value;
+    if (nameReg.test(value)) {
+        firstNameErrorMsg.innerHTML = "";
+    } else {
+        firstNameErrorMsg.innerHTML = "Incorrect, vérifiez votre prénom.";
+    }
+});
+
+var lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
+
+formulaire.lastName.addEventListener("change", function(e) {
+    var value = e.target.value;
+    if (nameReg.test(value)) {
+        lastNameErrorMsg.innerHTML = "";
+    } else {
+        lastNameErrorMsg.innerHTML = "Incorrect, vérifiez votre nom.";
+    }
+});
+
+var adressErrorMsg = document.querySelector("#addressErrorMsg");
+
+formulaire.address.addEventListener("change", function(e) {
+    var value = e.target.value;
+    if (adressReg.test(value)) {
+        adressErrorMsg.innerHTML = "";
+    } else {
+        adressErrorMsg.innerHTML = "Incorrect, vérifiez votre adresse postale.";
+    }
+});
+
+var cityErrorMsg = document.querySelector("#cityErrorMsg");
+
+formulaire.city.addEventListener("change", function(e) {
+    var value = e.target.value;
+    if (nameReg.test(value)) {
+        cityErrorMsg.innerHTML = "";
+    } else {
+        cityErrorMsg.innerHTML = "incorrect, vérifiez votre ville.";
+    }
+});
+
+var emailErrorMsg = document.querySelector('#emailErrorMsg');
+
+formulaire.email.addEventListener("change", function(e) {
+    var value = e.target.value;
+    if (emailReg.test(value)) {
+        emailErrorMsg.innerHTML = "";
+    } else {
+        emailErrorMsg.innerHTML = "Incorrect, vérifiez votre adresse email.";
+    }
+});
+
+//Passer commande
+var btnOrder = document.querySelector("#order");
+
+btnOrder.addEventListener("click", (event) => {
+
+    event.preventDefault();
+
+    let userFirstName = document.getElementById("firstName");
+    let userLastName = document.getElementById("lastName");
+    let userAddress = document.getElementById("address");
+    let userCity = document.getElementById("city");
+    let userEmail = document.getElementById("email");
+
+    if (kanapLocalStorage === null) {
+
+        event.preventDefault();
+
+        alert("Pour passer commande, veuillez ajouter des produits à votre panier");
+
+
+
+    } else if (userFirstName.value === "" || userLastName.value === "" || userAddress.value === "" || userCity.value === "" || userEmail.value === "") {
+
+        event.preventDefault();
+
+        alert(" Vous devez renseigner les champs du formulaire !");
+
+
+
+    } else if (nameReg.test(userFirstName.value) === false || nameReg.test(userLastName.value) === false || adressReg.test(userAddress.value) === false || nameReg.test(userCity.value) === false || emailReg.test(userEmail.value) === false) {
+
+        event.preventDefault();
+
+        alert("Vérifiez vos coordonnées pour passer la commande !");
+
+
+
+    } else {
+
+        let orderId = [];
+
+        for (let item = 0; item < (kanapLocalStorage.length); item++) {
+
+            orderId.push(kanapLocalStorage[item].Id);
+
+        }
+        console.log(orderId);
+        console.log("bon");
+
+        let order = {
+            user: {
+                firstName: userFirstName.value,
+                lastName: userLastName.value,
+                address: userAddress.value,
+                city: userCity.value,
+                email: userEmail.value,
+            },
+            products: orderId,
+        }
+
+
+        const choice = {
+
+            method: 'post',
+
+            body: JSON.stringify(order),
+
+            header: {
+                'accept': 'application/json',
+                'content-type': 'application/json'
+            },
+
+        };
+
+        fetch("http://localhost:3000/api/products/order", choice)
+
+        .then((res) => res.json())
+
+        .then((dataId) => {
+
+            localStorage.setItem('orderId', dataId.orderId);
+
+            document.location.href = 'confirmation.html?Id=' + dataId.orderId;
+        })
+
+
+        .catch((error) => {
+            alert("probleme api")
+        });
+    }
+});
