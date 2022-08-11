@@ -261,91 +261,102 @@ formulaire.email.addEventListener("change", function(e) {
 //Passer commande
 var btnOrder = document.querySelector("#order");
 
+function orderKanap() {
+
+
+    let contact = {
+
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value,
+    };
+
+    let products = [];
+
+    for (productList of kanapLocalStorage) {
+        let item = kanapLocalStorage.find(p => p.Id == productList.Id);
+        if (item != undefined) {
+            products.push(productList.Id);
+        } else {
+            alert("Le panier est vide !");
+        }
+    }
+    return orderData = { contact, products };
+};
+
 btnOrder.addEventListener("click", (event) => {
 
     event.preventDefault();
 
-    let userFirstName = document.getElementById("firstName");
-    let userLastName = document.getElementById("lastName");
-    let userAddress = document.getElementById("address");
-    let userCity = document.getElementById("city");
-    let userEmail = document.getElementById("email");
-
-    if (kanapLocalStorage === null) {
-
-        event.preventDefault();
-
-        alert("Pour passer commande, veuillez ajouter des produits à votre panier");
-
-
-
-    } else if (userFirstName.value === "" || userLastName.value === "" || userAddress.value === "" || userCity.value === "" || userEmail.value === "") {
-
-        event.preventDefault();
+    if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
 
         alert(" Vous devez renseigner les champs du formulaire !");
-
-
-
-    } else if (nameReg.test(userFirstName.value) === false || nameReg.test(userLastName.value) === false || adressReg.test(userAddress.value) === false || nameReg.test(userCity.value) === false || emailReg.test(userEmail.value) === false) {
-
-        event.preventDefault();
-
-        alert("Vérifiez vos coordonnées pour passer la commande !");
-
-
-
     } else {
 
-        let orderId = [];
+        orderKanap();
 
-        for (let item = 0; item < (kanapLocalStorage.length); item++) {
-
-            orderId.push(kanapLocalStorage[item].Id);
-
-        }
-        console.log(orderId);
-        console.log("bon");
-
-        let order = {
-            user: {
-                firstName: userFirstName.value,
-                lastName: userLastName.value,
-                address: userAddress.value,
-                city: userCity.value,
-                email: userEmail.value,
-            },
-            products: orderId,
-        }
-
-
-        const choice = {
+        let options = {
 
             method: 'post',
 
-            body: JSON.stringify(order),
+            body: JSON.stringify(orderData),
 
-            header: {
+            headers: {
                 'accept': 'application/json',
                 'content-type': 'application/json'
             },
 
         };
 
-        fetch("http://localhost:3000/api/products/order", choice)
 
-        .then((res) => res.json())
+        fetch("http://localhost:3000/api/products/order", options)
 
-        .then((dataId) => {
+        .then((response) => response.json())
 
-            localStorage.setItem('orderId', dataId.orderId);
+        .then(data => {
 
-            document.location.href = 'confirmation.html?Id=' + dataId.orderId;
+            localStorage.clear();
+
+            window.location = `./confirmation.html?orderid=${data.orderId}`;
+
         })
 
 
         .catch((error) => {
-            alert("probleme api")
-        });
+            alert("Probléme chargement de l'api !")
+        })
     }
 });
+
+// let userFirstName = document.getElementById("firstName");
+// let userLastName = document.getElementById("lastName");
+// let userAddress = document.getElementById("address");
+// let userCity = document.getElementById("city");
+// let userEmail = document.getElementById("email");
+
+// if (kanapLocalStorage === null) {
+
+//     event.preventDefault();
+
+//     alert("Pour passer commande, veuillez ajouter des produits à votre panier");
+
+
+// } else if (nameReg.test(userFirstName.value) === false || nameReg.test(userLastName.value) === false || adressReg.test(userAddress.value) === false || nameReg.test(userCity.value) === false || emailReg.test(userEmail.value) === false) {
+
+//     event.preventDefault();
+
+//     alert("Vérifiez vos coordonnées pour passer la commande !");
+
+
+
+// } else {
+
+//     let orderId = [];
+
+//     for (let item = 0; item < (kanapLocalStorage.length); item++) {
+
+//         orderId.push(kanapLocalStorage[item].Id);
+
+//     }
