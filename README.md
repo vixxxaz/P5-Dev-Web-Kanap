@@ -1,7 +1,7 @@
 # Projet 5 du parcour openclassroom developper web
 ---------------------------------
 
-## **Site Kanap**
+# **Site Kanap**
 -------------------
 
 ![logo du site](https://github.com/vixxxaz/P5-Dev-Web-Kanap/blob/master/front/images/logo.png)
@@ -24,12 +24,22 @@ Réalisation de la partie front-end Javascript du site e-commerce Kanap (marque 
 
 - Une page confirmation, ou un message s'affiche avec le numero de la commande.
 
-## Ceci est mon premier site en javascript 
+### Ceci est mon premier site en javascript 
 ---------
 J'ai découvert que j'aime beaucoup ce language, mais qu'il est aussi trés technique et qu'il y a plusieurs façons d'arriver au même résultat.
 J'éspère en développer d'autre à l'avenir !
 
+### comment faire fonctionner le site :
 
+#### This is the front end and back end server for Project 5 of the Web Developer path.
+
+#### Back end Prerequisites
+
+You will need to have Node and ==npm== installed locally on your machine.
+
+#### Back end Installation
+
+Clone this repo. From the "back" folder of the project, run ==npm install==. You can then run the server with node server. The server should run on ==localhost== with default ==port 3000==. If the server runs on another port for any reason, this is printed to the console when the server starts, e.g. ==Listening on port 3001==.
 
 
 
