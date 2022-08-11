@@ -4,7 +4,7 @@
 ## **Site Kanap**
 -------------------
 
-![logo du site](https://github.com/vixxxaz/P5-Dev-Web-Kanap/blob/master/front/images/logo.png =100x100)
+![logo du site](https://github.com/vixxxaz/P5-Dev-Web-Kanap/blob/master/front/images/logo.png)
 
 Réalisation de la partie front-end Javascript du site e-commerce Kanap (marque de canapés).
 
@@ -23,6 +23,13 @@ Réalisation de la partie front-end Javascript du site e-commerce Kanap (marque 
   - Un formulaire pour passer la commande. Les données du formulaire doivent être correct et manager par des regex, pour être sûr que les champs sont remplit correctement.
 
 - Une page confirmation, ou un message s'affiche avec le numero de la commande.
+
+## Ceci est mon premier site en javascript 
+---------
+J'ai découvert que j'aime beaucoup ce language, mais qu'il est aussi trés technique et qu'il y a plusieurs façons d'arriver au même résultat.
+J'éspère en développer d'autre à l'avenir !
+
+
 
 
 
