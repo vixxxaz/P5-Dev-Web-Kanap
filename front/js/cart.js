@@ -320,43 +320,10 @@ btnOrder.addEventListener("click", (event) => {
             localStorage.clear();
 
             window.location = `./confirmation.html?orderid=${data.orderId}`;
-
         })
-
 
         .catch((error) => {
             alert("Probléme chargement de l'api !")
         })
     }
 });
-
-// let userFirstName = document.getElementById("firstName");
-// let userLastName = document.getElementById("lastName");
-// let userAddress = document.getElementById("address");
-// let userCity = document.getElementById("city");
-// let userEmail = document.getElementById("email");
-
-// if (kanapLocalStorage === null) {
-
-//     event.preventDefault();
-
-//     alert("Pour passer commande, veuillez ajouter des produits à votre panier");
-
-
-// } else if (nameReg.test(userFirstName.value) === false || nameReg.test(userLastName.value) === false || adressReg.test(userAddress.value) === false || nameReg.test(userCity.value) === false || emailReg.test(userEmail.value) === false) {
-
-//     event.preventDefault();
-
-//     alert("Vérifiez vos coordonnées pour passer la commande !");
-
-
-
-// } else {
-
-//     let orderId = [];
-
-//     for (let item = 0; item < (kanapLocalStorage.length); item++) {
-
-//         orderId.push(kanapLocalStorage[item].Id);
-
-//     }

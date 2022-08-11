@@ -1,14 +1,15 @@
+// je vais chercher l'adresse de l'api
 const api = "http://localhost:3000/api/products/";
 
+// je crée url qui va chercher la page
 let url = new URL(window.location.href);
 
+//je vais chercher id du produit
 var id = url.searchParams.get("id");
 
 var data = "";
 
-
-
-
+//Je vais chercher les donnée du produit dans l'api
 fetch(api + id)
 
 .then(function(resultApi) {
@@ -22,6 +23,7 @@ fetch(api + id)
     kanapDisplay(data);
 })
 
+//affiche une erreur si les donnée ne sont pas disponible
 .catch(function(error) {
 
     alert("Erreur de telechargement des données!");
@@ -30,104 +32,92 @@ fetch(api + id)
 
 
 
-//afficher les information du produit 
-
+/*afficher les information du produit de maniere dynamique
+en prenant en parametre les données de l'api
+*/
 
 function kanapDisplay(data) {
 
-    //ajout de l'image
-
+    //creé un element img
     let kanapImg = document.createElement('img');
 
+    //choisi ou ajouter l'élément image
     document.querySelector('.item__img').appendChild(kanapImg);
 
+    //ajout de l'image grace a l'api
     kanapImg.src = data.imageUrl;
 
+    //ajoute le alt de l'image
     kanapImg.alt = data.altTxt;
 
-    //ajout du nom
-
+    // crée le nom du produit avec les données de l'api
     let name = data.name;
 
+    //Ajout du nom 
     document.getElementById('title').innerHTML = name;
 
-    // ajout du prix
-
+    // creer le prix du produit avec les données l'api
     let price = data.price;
 
+    // ajout du prix
     document.getElementById('price').innerHTML = price;
 
-    // ajout description
-
+    // crer la description avec les données de l'api
     let description = data.description;
 
+    // ajout de la description
     document.getElementById('description').innerHTML = description;
 
-    //option et couleur
-
+    //creer les option de couleur
     let options = data.colors;
 
-    //avoir la liste deroulante
-
+    //recupere la liste deroulante
     var liste = document.getElementById("colors");
 
-    //loop dans le tableau
-
+    //loop dans le tableau des couleur de l'api
     for (var i = 0; i < options.length; ++i) {
 
-        //ajout des couleur du tableau
-
+        //ajout des couleurs du tableau dans la liste déroulante
         liste[liste.length] = new Option(options[i], options[i]);
-
     };
-
+    //j'appelle la fonction creer en dessous avec en parametre les données de l'api
     addToCart(data);
-
 }
 
-
-// choix de l utilisateur
-
+// Récupére les choix de l utilisateur
 var colorChosen = document.querySelector("#colors")
 var quantityChosen = document.querySelector("#quantity")
 
-
-
 // function ajout dans le panier
-
 function addToCart(data) {
 
     //recuperer le bouton
-
     let btnSendToCart = document.querySelector("#addToCart");
 
     //fenetre pop up ajout kanap
-
     const popUpComfirmation = () => {
         if (window.confirm(`Votre commande de ${data.name} à bien été ajouter au panier`)) {
             window.location.href = 'cart.html';
         }
     }
 
-    // //creer le local storage
-    // var kanapLocalStorage = JSON.parse(localStorage.getItem("cart"));
-    //Ecouter le click sur le bouton avec la condition sur la couleur et le nombre
-
+    //Ecoute l'action du click sur le bouton ajouter au panier
     btnSendToCart.addEventListener("click", () => {
 
+        //Si la quantitée choisi est superieur à zero et inferieur ou egal à 100 et different de 0
         if (quantityChosen.value > 0 && quantityChosen.value <= 100 && quantityChosen.value != 0) {
 
-            //choix couleur
+            //Recupere le choix de couleur
             let colorsChoice = colorChosen.value;
 
-            //choix quantity
+            //recupere le choix de la quantity
             let quantityChoice = quantityChosen.value;
 
             let kanapfound = false;
             let position = 0;
             let add = true;
 
-            // option du kanap
+            // Crée les options en un objet avec les choix de l'utilisateur et les données du produit de l'api
             var optionsKanap = {
                 Id: id,
                 colorKanap: colorsChoice,
@@ -136,27 +126,29 @@ function addToCart(data) {
                 imgKanap: data.imageUrl,
                 altImg: data.altTxt,
             };
-            console.table(optionsKanap);
-            console.log("bon");
 
-
-
-            //creer le localStorage
+            //Crée le localStorage 
             let kanapLocalStorage = JSON.parse(localStorage.getItem("cart"));
-            console.log(kanapLocalStorage);
 
-
-            //importation dans le local storage
+            /*importation des options et des choix dans le localstorage 
+            creé ci-dessus
+             */
             if (kanapLocalStorage) {
 
+                //Crée une boucle dans le localstorage
                 for (let i = 0; i < (kanapLocalStorage.length); i++) {
 
+                    /*si l'id du produit est la même que celle dans le localstorage 
+                    et la couleur et la même 
+                    */
                     if (optionsKanap.Id === kanapLocalStorage[i].Id &&
                         optionsKanap.colorKanap === kanapLocalStorage[i].colorKanap) {
 
+                        /* Si la quantité choisi dans les options plus la quantité dans le loclstorage et superieur à  100 envois 
+                        un message d'erreur  */
                         if (optionsKanap.quantityKanap + kanapLocalStorage[i].quantityKanap > 100) {
 
-                            alert("Impossible d\'ajouter ce produit car limité à 100");
+                            alert("Impossible d\'ajouter ce produit car limité à 100 ");
 
                             add = false;
 
@@ -169,32 +161,35 @@ function addToCart(data) {
 
                     }
                 }
-                console.log(add);
-
+                //crée le resultat en allant chercher en fonction de l id et de la couleur
                 let resultFind = kanapLocalStorage.find(
                     (el) => el.Id === optionsKanap.Id && el.colorKanap === optionsKanap.colorKanap
                 );
 
                 //si le panier à déjà un article
                 if (resultFind && add === true) {
+                    //crée un nouvelle quantité en additionnant les options ajouté et le resultat ci dessus
                     let newQuantity =
                         parseInt(optionsKanap.quantityKanap) + parseInt(resultFind.quantityKanap);
                     resultFind.quantityKanap = newQuantity;
 
+                    // ajoute la nouvelle quantité dans le localstorage
                     localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
 
-                    // si le kanap est deja dans le panier
+                    // si et sinon le produit est deja dans le panier
                 } else if (add === true) {
                     kanapLocalStorage.push(optionsKanap);
-
                 }
 
+                //sinon ajoute les options au localstorage vide   
             } else {
                 kanapLocalStorage = [];
                 kanapLocalStorage.push(optionsKanap);
-
             }
+
             localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+
+            //affiche le message de confirmation
             popUpComfirmation()
         }
     });
