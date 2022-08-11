@@ -4,7 +4,7 @@
 ## **Site Kanap**
 -------------------
 
-![logo du site](https://github.com/vixxxaz/P5-Dev-Web-Kanap/blob/master/front/images/logo.png =100*100)
+![logo du site](https://github.com/vixxxaz/P5-Dev-Web-Kanap/blob/master/front/images/logo.png =100x100)
 
 Réalisation de la partie front-end Javascript du site e-commerce Kanap (marque de canapés).
 
