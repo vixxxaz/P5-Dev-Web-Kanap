@@ -197,15 +197,16 @@ function deleteProduct() {
 let formulaire = document.querySelector(".cart__order__form");
 
 
-// crée variable regex
-var adressReg = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+// crée variable associer au regex qui controle les entrées correct
+var addressReg = new RegExp("^[a-z0-9][a-z '-.,]{1,31}$|^$");
 var nameReg = new RegExp("^[A-zÀ-ú \-]+$");
 var emailReg = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
 
+// creer un variable pour recuperer la div du message d'erreur
+const firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
 
-var firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
-
-formulaire.firstName.addEventListener("change", function(e) {
+// écoute ce que met l utilisateur dans le champs du formulaire
+formulaire.firstName.addEventListener("change", (e) => {
     var value = e.target.value;
     if (nameReg.test(value)) {
         firstNameErrorMsg.innerHTML = "";
@@ -214,9 +215,12 @@ formulaire.firstName.addEventListener("change", function(e) {
     }
 });
 
+// creer un variable pour recuperer la div du message d'erreur
 var lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
 
-formulaire.lastName.addEventListener("change", function(e) {
+// écoute ce que met l utilisateur dans le champs du formulaire
+formulaire.lastName.addEventListener("change", (e) => {
+
     var value = e.target.value;
     if (nameReg.test(value)) {
         lastNameErrorMsg.innerHTML = "";
@@ -225,20 +229,26 @@ formulaire.lastName.addEventListener("change", function(e) {
     }
 });
 
-var adressErrorMsg = document.querySelector("#addressErrorMsg");
+// creer un variable pour recuperer la div du message d'erreur
+var addressErrorMsg = document.querySelector("#addressErrorMsg");
 
-formulaire.address.addEventListener("change", function(e) {
+// écoute ce que met l utilisateur dans le champs du formulaire
+formulaire.address.addEventListener("change", (e) => {
+
     var value = e.target.value;
-    if (adressReg.test(value)) {
-        adressErrorMsg.innerHTML = "";
+    if (addressReg.test(value)) {
+        addressErrorMsg.innerHTML = "";
     } else {
-        adressErrorMsg.innerHTML = "Incorrect, vérifiez votre adresse postale.";
+        addressErrorMsg.innerHTML = "Incorrect, vérifiez votre l'adresse entrée.";
     }
 });
 
+// creer un variable pour recuperer la div du message d'erreur
 var cityErrorMsg = document.querySelector("#cityErrorMsg");
 
-formulaire.city.addEventListener("change", function(e) {
+// écoute ce que met l utilisateur dans le champs du formulaire
+formulaire.city.addEventListener("change", (e) => {
+
     var value = e.target.value;
     if (nameReg.test(value)) {
         cityErrorMsg.innerHTML = "";
@@ -247,9 +257,12 @@ formulaire.city.addEventListener("change", function(e) {
     }
 });
 
+// creer un variable pour recuperer la div du message d'erreur
 var emailErrorMsg = document.querySelector('#emailErrorMsg');
 
-formulaire.email.addEventListener("change", function(e) {
+// écoute ce que met l utilisateur dans le champs du formulaire
+formulaire.email.addEventListener("change", (e) => {
+
     var value = e.target.value;
     if (emailReg.test(value)) {
         emailErrorMsg.innerHTML = "";
@@ -258,12 +271,12 @@ formulaire.email.addEventListener("change", function(e) {
     }
 });
 
-//Passer commande
+//Récupére le bouton qui passe la commande
 var btnOrder = document.querySelector("#order");
 
 function orderKanap() {
 
-
+    // creer un objet contact avec les valeur de l utilisateur
     let contact = {
 
         firstName: firstName.value,
@@ -276,15 +289,23 @@ function orderKanap() {
     let products = [];
 
     for (productList of kanapLocalStorage) {
+
         let item = kanapLocalStorage.find(p => p.Id == productList.Id);
+
         if (item != undefined) {
+
             products.push(productList.Id);
+
         } else {
+
             alert("Le panier est vide !");
+
         }
     }
+
     return orderData = { contact, products };
 };
+
 
 btnOrder.addEventListener("click", (event) => {
 
@@ -293,6 +314,11 @@ btnOrder.addEventListener("click", (event) => {
     if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
 
         alert(" Vous devez renseigner les champs du formulaire !");
+
+    } else if (nameReg.test(firstName.value) == false || nameReg.test(lastName.value) == false || addressReg.test(address.value) == false || nameReg.test(city.value) == false || emailReg.test(email.value) == false) {
+
+        alert("verifiez vos données de formulaire pour passer commande");
+
     } else {
 
         orderKanap();
