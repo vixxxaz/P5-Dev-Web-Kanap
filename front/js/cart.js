@@ -286,8 +286,11 @@ function orderKanap() {
         email: email.value,
     };
 
+    //creer un tableau vide
     let products = [];
 
+
+    //creer une boucle qui envois l id du localstorage dans le tableau
     for (productList of kanapLocalStorage) {
 
         let item = kanapLocalStorage.find(p => p.Id == productList.Id);
@@ -303,18 +306,22 @@ function orderKanap() {
         }
     }
 
+    //retourne un objet avec les données du formulaire et du produit
     return orderData = { contact, products };
 };
 
 
+//écoute le click sur le bouton commander
 btnOrder.addEventListener("click", (event) => {
 
     event.preventDefault();
 
+    //envois une alerte si un des champ et vierge
     if (firstName.value === "" || lastName.value === "" || address.value === "" || city.value === "" || email.value === "") {
 
         alert(" Vous devez renseigner les champs du formulaire !");
 
+        //empeche de passer la commande si le regex test n'est pas valide    
     } else if (nameReg.test(firstName.value) == false || nameReg.test(lastName.value) == false || addressReg.test(address.value) == false || nameReg.test(city.value) == false || emailReg.test(email.value) == false) {
 
         alert("verifiez vos données de formulaire pour passer commande");
@@ -323,6 +330,7 @@ btnOrder.addEventListener("click", (event) => {
 
         orderKanap();
 
+        // creer le post des données en chaine json
         let options = {
 
             method: 'post',
@@ -336,15 +344,16 @@ btnOrder.addEventListener("click", (event) => {
 
         };
 
-
+        //va chercher l'api et les données
         fetch("http://localhost:3000/api/products/order", options)
 
         .then((response) => response.json())
 
         .then(data => {
-
+            //vide le localstorage
             localStorage.clear();
 
+            //renvois sur la page comfirmation avec l'id de la commande dans l'url
             window.location = `./confirmation.html?orderid=${data.orderId}`;
         })
 
