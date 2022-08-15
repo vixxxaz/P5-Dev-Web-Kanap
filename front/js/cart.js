@@ -198,7 +198,7 @@ let formulaire = document.querySelector(".cart__order__form");
 
 
 // crée variable associer au regex qui controle les entrées correct
-var addressReg = new RegExp("^[a-z0-9][a-z '-.,]{1,31}$|^$");
+var addressReg = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
 var nameReg = new RegExp("^[A-zÀ-ú \-]+$");
 var emailReg = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
 
