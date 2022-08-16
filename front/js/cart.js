@@ -171,7 +171,7 @@ function kanapDisplayCart(data) {
             kanapDelete.innerHTML = "Supprimer";
 
             //appel de la fonction supprimer
-            deleteProduct();
+
 
             // calculer le prix total
             for (const dataElet of data) {
@@ -184,8 +184,10 @@ function kanapDisplayCart(data) {
             //affiche le prix total
             document.getElementById("totalPrice").innerHTML = priceTotalKanap;
         }
+        deleteProduct();
     }
 }
+
 
 //ajoute le nombre d'article à cotés du total dans le panier
 document.getElementById("totalQuantity").textContent = kanapLocalStorage.length;
