@@ -192,6 +192,7 @@ function kanapDisplayCart(data) {
 //ajoute le nombre d'article à cotés du total dans le panier
 document.getElementById("totalQuantity").textContent = kanapLocalStorage.length;
 
+
 //function pour supprimer un produit
 function deleteProduct() {
 
@@ -212,7 +213,7 @@ function deleteProduct() {
             localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
 
             //Alerte produit supprimé et refresh
-            alert("Ce produit a bien été supprimé du panier");
+            alert("Ce produit a bien été supprimé du panier !");
 
             location.reload();
         })
@@ -266,7 +267,7 @@ formulaire.address.addEventListener("change", (e) => {
     if (addressReg.test(value)) {
         addressErrorMsg.innerHTML = "";
     } else {
-        addressErrorMsg.innerHTML = "Incorrect, vérifiez votre l'adresse entrée.";
+        addressErrorMsg.innerHTML = "Incorrect, vérifiez l'adresse saisie.";
     }
 });
 
