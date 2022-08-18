@@ -44,32 +44,17 @@ function kanapDisplayCart(data) {
 
         const votrePanier = document.querySelector(".cart");
 
-        //creer l'element <a>    
-        const link = document.createElement('a');
-
-        title.appendChild(link);
-
-        link.href = `http://127.0.0.1:5501/P5-Dev-Web-Kanap/front/html/index.html`;
-
-        link.textContent = "Votre panier est vide, cliquez ici !";
-
-        // Enleve la décoration du lien
-        link.style.color = "white";
-        link.style.textDecoration = "none";
+        title.textContent = "votre panier est vide";
 
         votrePanier.style.display = "none";
 
         // sinon
     } else {
-
-        //Creation des produits dans le panier.
         for (let i = 0; i < kanapLocalStorage.length; i++) {
 
             let kanapArticle = document.createElement("article");
             document.querySelector("#cart__items").appendChild(kanapArticle);
             kanapArticle.className = "cart__item";
-
-            //prend l'id du canapé dans le localstorage et l'ajoute dans l'attribut 
             kanapArticle.setAttribute("data-id", kanapLocalStorage[i].Id);
 
             //div de l image
@@ -109,7 +94,6 @@ function kanapDisplayCart(data) {
             let kanapPrice = document.createElement("p");
             kanapDivDescription.appendChild(kanapPrice);
 
-            // Va chercher le prix en prenant id du localstorage et du canapés choisi
             for (let kPrice of data) {
 
                 if (kanapLocalStorage[i].Id === kPrice._id) {
@@ -118,22 +102,22 @@ function kanapDisplayCart(data) {
 
             }
 
-            // ajout de la div setting
+            //ajout de la div setting
             let kanapContentSetting = document.createElement("div");
             kanapDivContent.appendChild(kanapContentSetting);
             kanapContentSetting.className = "cart__item__content__settings";
 
-            // ajout de la div quantity
+            //ajout de la div quantity
             let kanapQuantityDiv = document.createElement("div");
             kanapContentSetting.appendChild(kanapQuantityDiv);
             kanapQuantityDiv.className = "cart__item__content__settings__quantity"
 
-            // ajout du paragraphe qui contient la quantité
+            //ajout du paragraphe qui contient la quantité
             let kanapQuantity = document.createElement("p");
             kanapQuantityDiv.appendChild(kanapQuantity);
             kanapQuantity.innerText = "Qté : ";
 
-            // Ajout de l'élement input
+            //ajout de l'élement input
             let addKanapQuantity = document.createElement("input");
             kanapQuantityDiv.appendChild(addKanapQuantity);
             addKanapQuantity.value = kanapLocalStorage[i].quantityKanap;
@@ -143,20 +127,28 @@ function kanapDisplayCart(data) {
             addKanapQuantity.setAttribute("min", "1");
             addKanapQuantity.setAttribute("max", "100");
 
-            // Ecoute le changement dans input quantité
+
+
             addKanapQuantity.addEventListener("change", (e) => {
                 e.preventDefault();
 
                 for (const k of kanapLocalStorage) {
+
                     if (kanapLocalStorage[i].Id === k.Id && kanapLocalStorage[i].colorKanap === k.colorKanap) {
+
+                        priceTotalKanap -= kanapLocalStorage[i].quantityKanap * parseInt(kanapPrice.textContent);
 
                         kanapLocalStorage[i].quantityKanap = parseInt(addKanapQuantity.value);
 
                         localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
 
-                        location.reload();
+                        priceTotalKanap += parseInt(kanapPrice.textContent) * kanapLocalStorage[i].quantityKanap;
+
+                        document.getElementById("totalPrice").innerHTML = priceTotalKanap;
+
                     }
                 }
+
             })
 
             //ajout de la div du button supprimer
@@ -170,30 +162,24 @@ function kanapDisplayCart(data) {
             kanapDelete.className = "deleteItem";
             kanapDelete.innerHTML = "Supprimer";
 
-            //appel de la fonction supprimer
+            deleteProduct();
 
-
-            // calculer le prix total
             for (const dataElet of data) {
 
                 if (dataElet._id === kanapLocalStorage[i].Id) {
+
                     priceTotalKanap += dataElet.price * kanapLocalStorage[i].quantityKanap;
                 }
 
             }
-            //affiche le prix total
             document.getElementById("totalPrice").innerHTML = priceTotalKanap;
         }
-        deleteProduct();
     }
 }
+document.getElementById("totalPrice").innerHTML = priceTotalKanap;
 
-
-//ajoute le nombre d'article à cotés du total dans le panier
 document.getElementById("totalQuantity").textContent = kanapLocalStorage.length;
 
-
-//function pour supprimer un produit
 function deleteProduct() {
 
     let btnDelete = document.querySelectorAll(".deleteItem");
@@ -213,7 +199,7 @@ function deleteProduct() {
             localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
 
             //Alerte produit supprimé et refresh
-            alert("Ce produit a bien été supprimé du panier !");
+            alert("Ce produit a bien été supprimé du panier");
 
             location.reload();
         })
@@ -226,7 +212,7 @@ let formulaire = document.querySelector(".cart__order__form");
 
 
 // crée variable associer au regex qui controle les entrées correct
-var addressReg = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+var addressReg = new RegExp("^[a-z0-9][a-z '-.,]{1,31}$|^$");
 var nameReg = new RegExp("^[A-zÀ-ú \-]+$");
 var emailReg = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
 
@@ -267,7 +253,7 @@ formulaire.address.addEventListener("change", (e) => {
     if (addressReg.test(value)) {
         addressErrorMsg.innerHTML = "";
     } else {
-        addressErrorMsg.innerHTML = "Incorrect, vérifiez l'adresse saisie.";
+        addressErrorMsg.innerHTML = "Incorrect, vérifiez votre l'adresse entrée.";
     }
 });
 

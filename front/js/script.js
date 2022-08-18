@@ -1,9 +1,7 @@
-"use strict";
-
-//fonction qui va chercher les données de l 'api :
+//fonction asynchrone qui va chercher les données de l 'api :
 
 async function getKanap() {
-    var kanapData = await fetch("http://localhost:3000/api/products");
+    const kanapData = await fetch("http://localhost:3000/api/products");
     return await kanapData.json();
 };
 
@@ -12,7 +10,7 @@ async function getKanap() {
 
 async function kanapDisplay() {
 
-    var kanapData = await getKanap()
+    await getKanap()
 
     .then(function(resultApi) {
 

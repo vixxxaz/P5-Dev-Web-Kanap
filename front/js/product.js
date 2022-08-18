@@ -135,62 +135,52 @@ function addToCart(data) {
              */
             if (kanapLocalStorage) {
 
-                //Crée une boucle dans le localstorage
-                for (let i = 0; i < (kanapLocalStorage.length); i++) {
-
-                    /*si l'id du produit est la même que celle dans le localstorage 
-                    et la couleur et la même 
-                    */
-                    if (optionsKanap.Id === kanapLocalStorage[i].Id &&
-                        optionsKanap.colorKanap === kanapLocalStorage[i].colorKanap) {
-
-                        /* Si la quantité choisi dans les options plus la quantité dans le loclstorage et superieur à  100 envois 
-                        un message d'erreur  */
-                        if (optionsKanap.quantityKanap + kanapLocalStorage[i].quantityKanap > 100) {
-
-                            alert("Impossible d\'ajouter ce produit car limité à 100 ");
-
-                            add = false;
-
-                        } else {
-
-                            kanapfound = true;
-                            position = i;
-                            break;
-                        }
-
-                    }
-                }
                 //crée le resultat en allant chercher en fonction de l id et de la couleur
                 let resultFind = kanapLocalStorage.find(
                     (el) => el.Id === optionsKanap.Id && el.colorKanap === optionsKanap.colorKanap
                 );
 
                 //si le panier à déjà un article
-                if (resultFind && add === true) {
+                if (resultFind) {
                     //crée un nouvelle quantité en additionnant les options ajouté et le resultat ci dessus
                     let newQuantity =
                         parseInt(optionsKanap.quantityKanap) + parseInt(resultFind.quantityKanap);
                     resultFind.quantityKanap = newQuantity;
+                    kanapfound = true;
 
-                    // ajoute la nouvelle quantité dans le localstorage
-                    localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+                    if (parseInt(resultFind.quantityKanap) > 100) {
+                        alert("Impossible d\'ajouter ce produit car limité à 100 ");
+                        kanapfound = false;
+
+                    }
+
+                    if ((parseInt(resultFind.quantityKanap) <= 100) && (kanapfound === true)) {
+                        // ajoute la nouvelle quantité dans le localstorage
+                        localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+                        popUpComfirmation()
+                    }
+
+
 
                     // si et sinon le produit est deja dans le panier
-                } else if (add === true) {
+                } else {
                     kanapLocalStorage.push(optionsKanap);
+                    localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+                    popUpComfirmation()
                 }
 
                 //sinon ajoute les options au localstorage vide   
             } else {
                 kanapLocalStorage = [];
                 kanapLocalStorage.push(optionsKanap);
+                localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+                popUpComfirmation()
             }
 
-            localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
+            // localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
 
-            //affiche le message de confirmation
-            popUpComfirmation()
+            // //affiche le message de confirmation
+            // popUpComfirmation()
         }
     });
 
