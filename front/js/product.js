@@ -113,9 +113,9 @@ function addToCart(data) {
             //recupere le choix de la quantity
             let quantityChoice = quantityChosen.value;
 
-            let kanapfound = false;
-            let position = 0;
-            let add = true;
+            //Variable de verification
+            let kanapFound = false;
+
 
             // Crée les options en un objet avec les choix de l'utilisateur et les données du produit de l'api
             var optionsKanap = {
@@ -146,23 +146,22 @@ function addToCart(data) {
                     let newQuantity =
                         parseInt(optionsKanap.quantityKanap) + parseInt(resultFind.quantityKanap);
                     resultFind.quantityKanap = newQuantity;
-                    kanapfound = true;
+                    kanapFound = true;
 
+                    //Si le resultat trouvé est superieur à 100
                     if (parseInt(resultFind.quantityKanap) > 100) {
                         alert("Impossible d\'ajouter ce produit car limité à 100 ");
-                        kanapfound = false;
+                        kanapFound = false;
 
                     }
 
-                    if ((parseInt(resultFind.quantityKanap) <= 100) && (kanapfound === true)) {
+                    if ((parseInt(resultFind.quantityKanap) <= 100) && (kanapFound === true)) {
                         // ajoute la nouvelle quantité dans le localstorage
                         localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
                         popUpComfirmation()
                     }
 
-
-
-                    // si et sinon le produit est deja dans le panier
+                    // sinon ajoute le produit 
                 } else {
                     kanapLocalStorage.push(optionsKanap);
                     localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
@@ -176,12 +175,6 @@ function addToCart(data) {
                 localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
                 popUpComfirmation()
             }
-
-            // localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
-
-            // //affiche le message de confirmation
-            // popUpComfirmation()
         }
     });
-
 }

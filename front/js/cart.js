@@ -38,18 +38,31 @@ function kanapDisplayCart(data) {
 
     if (!kanapLocalStorage || (kanapLocalStorage.length) === 0) {
 
-        //pour le panier vide
-
+        /** pour le panier vide, ajout d'un message
+         * et d'un lien vers la page d'accueil!
+         */
         const title = document.querySelector("h1");
 
         const votrePanier = document.querySelector(".cart");
 
-        title.textContent = "votre panier est vide";
+        let link = document.createElement('a');
 
+        title.appendChild(link);
+
+        link.href = `./index.html`;
+
+        link.textContent = "Votre panier est vide, cliquez ici !";
+
+        // Enleve la décoration du lien
+        link.style.color = "white";
+        link.style.textDecoration = "none";
+
+        //fait disparaitre le reste de la page si le panier est vide
         votrePanier.style.display = "none";
 
         // sinon
     } else {
+
         for (let i = 0; i < kanapLocalStorage.length; i++) {
 
             let kanapArticle = document.createElement("article");
@@ -128,14 +141,17 @@ function kanapDisplayCart(data) {
             addKanapQuantity.setAttribute("max", "100");
 
 
-
+            //Ecoute le changement dans quantité sur l'input qté:
             addKanapQuantity.addEventListener("change", (e) => {
                 e.preventDefault();
 
+                //Crée une boucle dans le localstorage
                 for (const k of kanapLocalStorage) {
 
+                    //compare les id du localstorage et la couleur
                     if (kanapLocalStorage[i].Id === k.Id && kanapLocalStorage[i].colorKanap === k.colorKanap) {
 
+                        //multipli la quantité du localstorage par le prix 
                         priceTotalKanap -= kanapLocalStorage[i].quantityKanap * parseInt(kanapPrice.textContent);
 
                         kanapLocalStorage[i].quantityKanap = parseInt(addKanapQuantity.value);
@@ -172,6 +188,8 @@ function kanapDisplayCart(data) {
                 }
 
             }
+
+            //Insert le prix total 
             document.getElementById("totalPrice").innerHTML = priceTotalKanap;
         }
     }
@@ -180,12 +198,14 @@ document.getElementById("totalPrice").innerHTML = priceTotalKanap;
 
 document.getElementById("totalQuantity").textContent = kanapLocalStorage.length;
 
+//function supprimer un produit
 function deleteProduct() {
 
     let btnDelete = document.querySelectorAll(".deleteItem");
 
     for (let j = 0; j < btnDelete.length; j++) {
 
+        //ecoute le click sur le bouton supprimer
         btnDelete[j].addEventListener("click", (event) => {
 
             event.preventDefault();
