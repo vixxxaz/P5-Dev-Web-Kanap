@@ -32,6 +32,7 @@ var kanapLocalStorage = JSON.parse(localStorage.getItem("cart"));
 //variable pour addition des prix
 var priceTotalKanap = 0;
 
+
 //afficher les kanapé choisi sur la page cart
 
 function kanapDisplayCart(data) {
@@ -151,17 +152,32 @@ function kanapDisplayCart(data) {
                     //compare les id du localstorage et la couleur
                     if (kanapLocalStorage[i].Id === k.Id && kanapLocalStorage[i].colorKanap === k.colorKanap) {
 
-                        //multipli la quantité du localstorage par le prix 
+                        //supprime le prix du canapé dans le prix total
                         priceTotalKanap -= kanapLocalStorage[i].quantityKanap * parseInt(kanapPrice.textContent);
 
-                        kanapLocalStorage[i].quantityKanap = parseInt(addKanapQuantity.value);
+                        if ((parseInt(addKanapQuantity.value)) > 0) {
+                            //recupere la nouvelle quantité 
+                            kanapLocalStorage[i].quantityKanap = parseInt(addKanapQuantity.value);
 
+                        }
+
+                        //sauvegarde la nouvelle quantité dans le ls
                         localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
 
+                        //recalcule le prix total avec la nouvelle quantité
                         priceTotalKanap += parseInt(kanapPrice.textContent) * kanapLocalStorage[i].quantityKanap;
 
                         document.getElementById("totalPrice").innerHTML = priceTotalKanap;
 
+                        let totalKanap = 0;
+
+                        for (let y = 0; y < kanapLocalStorage.length; y++) {
+
+                            totalKanap += parseInt(kanapLocalStorage[y].quantityKanap);
+
+                            document.getElementById("totalQuantity").textContent = totalKanap;
+
+                        }
                     }
                 }
 
@@ -178,8 +194,7 @@ function kanapDisplayCart(data) {
             kanapDelete.className = "deleteItem";
             kanapDelete.innerHTML = "Supprimer";
 
-            deleteProduct();
-
+            // calcul le prix total
             for (const dataElet of data) {
 
                 if (dataElet._id === kanapLocalStorage[i].Id) {
@@ -192,11 +207,27 @@ function kanapDisplayCart(data) {
             //Insert le prix total 
             document.getElementById("totalPrice").innerHTML = priceTotalKanap;
         }
+        //appel la fonction supprimer un produit
+        deleteProduct();
     }
 }
+
+
 document.getElementById("totalPrice").innerHTML = priceTotalKanap;
 
-document.getElementById("totalQuantity").textContent = kanapLocalStorage.length;
+// Ajoute le nombre total de canapé à cotés du prix 
+let totalKanap = 0;
+
+for (let z = 0; z < kanapLocalStorage.length; z++) {
+
+    totalKanap += parseInt(kanapLocalStorage[z].quantityKanap);
+};
+
+
+document.getElementById("totalQuantity").textContent = totalKanap;
+
+
+
 
 //function supprimer un produit
 function deleteProduct() {
@@ -214,6 +245,7 @@ function deleteProduct() {
             let idDelete = kanapLocalStorage[j].Id;
             let colorDelete = kanapLocalStorage[j].colorKanap;
 
+            //utilise filter pour choisir le bon canapé et écrase le ls
             kanapLocalStorage = kanapLocalStorage.filter(el => el.Id !== idDelete || el.colorKanap !== colorDelete);
 
             localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
@@ -226,6 +258,7 @@ function deleteProduct() {
     }
 }
 
+/**************************************************************************partie formulaire ******************************************************/
 //prendre le formaulaire
 
 let formulaire = document.querySelector(".cart__order__form");
@@ -304,6 +337,8 @@ formulaire.email.addEventListener("change", (e) => {
         emailErrorMsg.innerHTML = "Incorrect, vérifiez votre adresse email.";
     }
 });
+
+
 
 //Récupére le bouton qui passe la commande
 var btnOrder = document.querySelector("#order");

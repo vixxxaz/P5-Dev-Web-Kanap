@@ -9,7 +9,7 @@ var id = url.searchParams.get("id");
 
 var data = "";
 
-//Je vais chercher les donnée du produit dans l'api
+//Je vais chercher les données du produit dans l'api
 fetch(api + id)
 
 .then(function(resultApi) {
@@ -30,11 +30,9 @@ fetch(api + id)
 })
 
 
-
-
-/*afficher les information du produit de maniere dynamique
+/***afficher les information du produit de maniere dynamique
 en prenant en parametre les données de l'api
-*/
+*****/
 
 function kanapDisplay(data) {
 
@@ -80,11 +78,11 @@ function kanapDisplay(data) {
         //ajout des couleurs du tableau dans la liste déroulante
         liste[liste.length] = new Option(options[i], options[i]);
     };
-    //j'appelle la fonction creer en dessous avec en parametre les données de l'api
+    //j'appelle la fonction pour ajouter les kanapé au panier ,creer en dessous avec en parametre les données de l'api
     addToCart(data);
 }
 
-// Récupére les choix de l utilisateur
+// Récupére les div des choix de l utilisateur
 var colorChosen = document.querySelector("#colors")
 var quantityChosen = document.querySelector("#quantity")
 

@@ -79,4 +79,5 @@ async function kanapDisplay() {
     })
 }
 
+//appel la fonction crée ci-dessus 
 kanapDisplay();
