@@ -4,7 +4,7 @@ const api = "http://localhost:3000/api/products/";
 // je crée url qui va chercher la page
 let url = new URL(window.location.href);
 
-//je vais chercher id du produit
+//je vais chercher id du produit dans url
 var id = url.searchParams.get("id");
 
 var data = "";
@@ -12,12 +12,14 @@ var data = "";
 //Je vais chercher les données du produit dans l'api
 fetch(api + id)
 
+//si j'ai la reponse je retourne les données en json
 .then(function(resultApi) {
     if (resultApi.ok) {
         return resultApi.json();
     }
 })
 
+//envois les données dans la fonction d'affichage
 .then(function(data) {
 
     kanapDisplay(data);
@@ -92,9 +94,10 @@ function addToCart(data) {
     //recuperer le bouton
     let btnSendToCart = document.querySelector("#addToCart");
 
-    //fenetre pop up ajout kanap
+    //function de fenetre pop up ajout kanap
     const popUpComfirmation = () => {
-        if (window.confirm(`Votre commande de ${data.name} à bien été ajouter au panier`)) {
+        if (window.confirm(`Votre commande de ${data.name} au prix unitaire de ${data.price} euro à bien été ajouté á votre panier !`)) {
+            //envois sur la page panier
             window.location.href = 'cart.html';
         }
     }
@@ -140,6 +143,7 @@ function addToCart(data) {
 
                 //si le panier à déjà un article
                 if (resultFind) {
+
                     //crée un nouvelle quantité en additionnant les options ajouté et le resultat ci dessus
                     let newQuantity =
                         parseInt(optionsKanap.quantityKanap) + parseInt(resultFind.quantityKanap);
@@ -148,12 +152,14 @@ function addToCart(data) {
 
                     //Si le resultat trouvé est superieur à 100
                     if (parseInt(resultFind.quantityKanap) > 100) {
-                        alert("Impossible d\'ajouter ce produit car limité à 100 ");
+                        alert("Impossible d\'ajouter ce produit car limité à 100");
                         kanapFound = false;
 
                     }
 
+                    //Si le resultat trouver est <= a 100 
                     if ((parseInt(resultFind.quantityKanap) <= 100) && (kanapFound === true)) {
+
                         // ajoute la nouvelle quantité dans le localstorage
                         localStorage.setItem("cart", JSON.stringify(kanapLocalStorage));
                         popUpComfirmation()
@@ -175,4 +181,4 @@ function addToCart(data) {
             }
         }
     });
-}
+};

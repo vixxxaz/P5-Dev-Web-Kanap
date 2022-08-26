@@ -1,19 +1,21 @@
 //fonction asynchrone qui va chercher les données de l 'api :
-
 async function getKanap() {
+
     const kanapData = await fetch("http://localhost:3000/api/products");
+
     return await kanapData.json();
 };
 
 
 // function qui reprend les données de l'api pour les envoyer dans le dom
-
 async function kanapDisplay() {
 
+    //attend les données de la fonction ci-dessus
     await getKanap()
 
     .then(function(resultApi) {
 
+        //creer un nouveau nom a la reponse de l'api
         const kanaps = resultApi;
 
         // boucle pour afficher les données des kanap dans des cartes sur la page d'accueil.
@@ -28,13 +30,11 @@ async function kanapDisplay() {
             //Ajout de attribut href et envois sur la page produit avec l'id du produit choisi.
             kanapLink.href += `./product.html?id=${resultApi[kanap]._id}`;
 
-
             //création de lélément <article> :
             let kanapArticle = document.createElement('article');
 
             //Ajout de l'élément comme enfant de l'élément <a>
             kanapLink.appendChild(kanapArticle);
-
 
             //création de lélément <img>
             let kanapImg = document.createElement('img');
@@ -48,7 +48,6 @@ async function kanapDisplay() {
             // attribution de l'attribut alt .
             kanapImg.alt = resultApi[kanap].altTxt;
 
-
             //création de l'élément h3
             let kanapName = document.createElement("h3");
 
@@ -60,7 +59,6 @@ async function kanapDisplay() {
 
             //Remplir le titre avec le nom dans l'api.
             kanapName.innerHTML = resultApi[kanap].name;
-
 
             //création de l'élément <p>
             let kanapDescription = document.createElement("p");
@@ -75,9 +73,8 @@ async function kanapDisplay() {
             kanapDescription.innerHTML = resultApi[kanap].description;
 
         }
-
     })
-}
+};
 
 //appel la fonction crée ci-dessus 
 kanapDisplay();
