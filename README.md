@@ -28,7 +28,7 @@ Réalisation de la partie front-end Javascript du site e-commerce Kanap (marque 
 ---------
 J'ai découvert que j'aime beaucoup ce language, mais qu'il est aussi trés technique et qu'il y a plusieurs façons d'arriver au même résultat.
 J'éspère en développer d'autre à l'avenir !
-
+## vous pouvez tester le site sur https://vixxxaz.github.io/kanapOnline/
 
 
 
